@@ -42,3 +42,4 @@
 #   FS management
 ######
     - cifs-utils
+    - nfs-common

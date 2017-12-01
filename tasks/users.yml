@@ -1,0 +1,49 @@
+
+- name: create groups
+  block:
+    - name: create miseq group
+      group:
+        name: miseq
+        gid: 1003
+        state: present
+    
+    - name: create ngs group
+      group:
+        name: "{{ username }}"
+        state: present
+
+- name: create users
+  block:
+    - name: create miseq user
+      user: 
+        name: miseq
+        comment: "miseq user for sharing raw data"
+        group: miseq
+        uid: 1003
+        state: present
+      
+    - name: create ngs user
+      user:
+        name: "{{ username }}"
+        shell: /bin/bash
+        comment: "NGS user"
+        group: "{{ username }}"
+        groups: miseq
+        state: present
+
+- name: add keys
+  block:
+
+    # abomba to root
+    - name: add public key
+      lineinfile:
+        path: /root/.ssh/authorized_keys
+        line: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDpvdk3hf2oU3VxMob5O5jFFFw5TGaK8BbG/fX36S4pTV6sq8khANZtBoTIpNz07U88AgMLFuuuHtwwWZzKnhPkSbhru8is9Y5X88hCYQ2aNYkIXEoFtGMW9CDAmvRJlrozj8wNCLPjsr2tCTbkFZNoOqQuvd+53zy3obNrPv83DCT0fFGrtPjoRUB8pcJR4PKRod587x/8rqY985XvzJoHGjLCNB8H7zi5yK16Qee6EQvNXrQs9N0Ed+q6AFUME169+IMP54Ocl16Q/DTICgmSQRIaNxrqUArHYvunRgc/jwRK0yKevP/2+bxYq8EvXqf+q3igKfXrIX+l2S5hJeLt'
+        create: yes
+  
+    # abomba to ngs
+    - name: add public key
+      lineinfile:
+        path: /home/{{ username }}/.ssh/authorized_keys
+        line: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDpvdk3hf2oU3VxMob5O5jFFFw5TGaK8BbG/fX36S4pTV6sq8khANZtBoTIpNz07U88AgMLFuuuHtwwWZzKnhPkSbhru8is9Y5X88hCYQ2aNYkIXEoFtGMW9CDAmvRJlrozj8wNCLPjsr2tCTbkFZNoOqQuvd+53zy3obNrPv83DCT0fFGrtPjoRUB8pcJR4PKRod587x/8rqY985XvzJoHGjLCNB8H7zi5yK16Qee6EQvNXrQs9N0Ed+q6AFUME169+IMP54Ocl16Q/DTICgmSQRIaNxrqUArHYvunRgc/jwRK0yKevP/2+bxYq8EvXqf+q3igKfXrIX+l2S5hJeLt'
+        create: yes

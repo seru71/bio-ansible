@@ -9,44 +9,47 @@
     - soft_dir: /ngs/software/apps
     - modules_dir: /ngs/software/modules
     - ref_dir: /ngs/prod/reference
-    #- data_dir: /ngs/prod/data_tmp
     - work_dir: /ngs/prod/scratch
-    - archive_dir: /ngs/prod/archive
+    - archive_dir: "{{ ngs_share_dir }}/miseq_results"
     - test_data_dir: /ngs/test/raw_data
     - test_work_dir: /ngs/test/scratch
     - test_archive_dir: /ngs/test/archive
 
-    - incoming_data_dir: /mnt/data/miseq_incoming
-    - incoming_dir_NFS_share: //NFS/share
-    - cifs_credentials_file: /root/cifs.credentials
-    - cifs_mount_username: username
-    - cifs_mount_password: password
-
-
+    - ngs_share_dir: /mnt/ngs_data
+    - ngs_share_dir_source: 172.21.0.91:/storage/data
+    - miseq_raw_dir: /mnt/miseq_raw
+    - miseq_raw_dir_source: 172.21.0.91:/storage/miseq_raw
+    - incoming_data_dir: "{{ miseq_raw_dir }}"
+    
   pre_tasks:
   
   - name: set timezone to Europe/Warsaw
     timezone:
       name: Europe/Warsaw
 
-  - name: create ngs group
-    group:
-      name: "{{ username }}"
-      state: present
+  - include: tasks/users.yml
+    tags: users
 
-  - name: create ngs user
-    user:
-      name: "{{ username }}"
-      shell: /bin/bash
-      comment: "NGS user"
-      group: "{{ username }}"
-      state: present
-
-  - name: add public key
-    lineinfile:
-      path: /home/{{ username }}/.ssh/authorized_keys
-      line: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDpvdk3hf2oU3VxMob5O5jFFFw5TGaK8BbG/fX36S4pTV6sq8khANZtBoTIpNz07U88AgMLFuuuHtwwWZzKnhPkSbhru8is9Y5X88hCYQ2aNYkIXEoFtGMW9CDAmvRJlrozj8wNCLPjsr2tCTbkFZNoOqQuvd+53zy3obNrPv83DCT0fFGrtPjoRUB8pcJR4PKRod587x/8rqY985XvzJoHGjLCNB8H7zi5yK16Qee6EQvNXrQs9N0Ed+q6AFUME169+IMP54Ocl16Q/DTICgmSQRIaNxrqUArHYvunRgc/jwRK0yKevP/2+bxYq8EvXqf+q3igKfXrIX+l2S5hJeLt'
-      create: yes
+  - name: Create and mount NGS share dirs
+    block:
+    
+      - name: Mount NFS share for miseq raw data
+        mount:
+          path: "{{ miseq_raw_dir }}"
+          src: "{{ miseq_raw_dir_source }}"
+          fstype: nfs
+          state: mounted
+        ignore_errors: yes
+    
+      - name: Mount NFS share for results
+        mount:
+          path: "{{ ngs_share_dir }}"
+          src: "{{ ngs_share_dir_source }}"
+          fstype: nfs
+          state: mounted
+        ignore_errors: yes
+        
+    tags: mount
 
   - name: Create necessary dirs
     file: path={{item}} state=directory mode=ug+rwx group="{{ username }}" owner="{{ username }}"
@@ -61,31 +64,36 @@
         - "{{test_work_dir}}"
         - "{{test_archive_dir}}"
 
-  - name: Create and mount incoming dir
-    block:
-      - file: path="{{incoming_data_dir}}" state=directory mode="a+rx"
+  #- name: Create and mount NGS share dir
+    #block:
+
+      #- file: path="{{ incoming_data_dir }}" state=directory mode="a+rx"
       
-      - name: save credentials in file (DOES NOT overwrite) 
-        shell: echo "username={{cifs_mount_username}}\npassword={{cifs_mount_password}}" > {{cifs_credentials_file}}
-        args:
-            creates: "{{cifs_credentials_file}}"
+      #- name: save credentials in file
+        #lineinfile:
+          #path: "{{cifs_credentials_file}}"
+          #line: "username={{cifs_mount_username}}\npassword={{cifs_mount_password}}"
+          #create: yes
             
-      - name: Mount NFS share
-        mount:
-          path: "{{ incoming_data_dir }}"
-          src: "{{ incoming_dir_NFS_share }}"
-          fstype: cifs
-          opts: "credentials=/root/cifs.credentials,uid={{ username }},gid={{ username }}"
-          state: mounted
-        ignore_errors: yes
-    tags: mount
+      #- name: Mount NFS share
+        #mount:
+          #path: "{{ incoming_data_dir }}"
+          #src: "{{ incoming_dir_NFS_share }}"
+          #fstype: cifs
+          #opts: "credentials=/root/cifs.credentials,uid={{ username }},gid={{ username }}"
+          #state: mounted
+        #ignore_errors: yes
+
+
 
       
   tasks:
   
-    - include: tasks/bia-pipeline-common-packages.yml tags=biacommon
+    - include: tasks/bia-pipeline-common-packages.yml 
+      tags: biacommon
     
     - include: tasks/java.yml 
+      tags: java
     #- include: tasks/java-link.yml tags=java-link
 
     - include: tasks/bcl2fastq.yml 

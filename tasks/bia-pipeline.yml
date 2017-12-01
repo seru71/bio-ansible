@@ -41,3 +41,15 @@
   #become: true
   #become_user: root
 
+# Set up crontab to cleanup scratch dir when exeeding 100GB 
+- name: Set cleanup job
+  block:
+    - name: copy cleanup script
+      copy: src=scripts/cleanup_workdir.sh dest={{ soft_dir }}/bia-pipeline/cleanup_script.sh owner={{ username }} group={{ username }} mode=0755
+
+    - name: set the cron job
+      cron:
+        name: cleanup workdir
+        hour: 0
+        job: "{{ soft_dir }}/bia-pipeline/cleanup_script.sh {{ work_dir }}"
+
