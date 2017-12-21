@@ -29,7 +29,7 @@ Get a copy of this project
 `cd ngs-compute-ansible`
 
 Play the book
-`ansible-playbook -K -k -u ngs -s -i [IP_VM] bia-pipeline-env.yml`
+`ansible-playbook -K -k -u ngs -s -i [IP_VM], bia-pipeline-env.yml`
 
 Other
 --
