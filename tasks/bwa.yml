@@ -4,34 +4,20 @@
   
     - name: Download BWA
       get_url:
-        url: http://sourceforge.net/projects/bio-bwa/files/bwa-0.7.12.tar.bz2
-        dest: "{{source_dir}}/bwa-0.7.12.tar.bz2"
+        url: http://sourceforge.net/projects/bio-bwa/files/bwa-{{version}}.tar.bz2
+        dest: "{{source_dir}}/bwa-{{version}}.tar.bz2"
 
     - name: Uncompress BWA
       unarchive:
-        src: "{{ source_dir }}/bwa-0.7.12.tar.bz2"
+        src: "{{ source_dir }}/bwa-{{version}}.tar.bz2"
         dest: "{{ source_dir }}"
         copy: no
 
     - name: Build and Install BWA
-      shell: cd {{ source_dir }}/bwa-0.7.12; make && mkdir -p "{{ soft_dir }}/BWA-0.7.12/bin" && cp bwa qualfa2fq.pl xa2multi.pl "{{ soft_dir }}/BWA-0.7.12/bin"
+      shell: cd {{ source_dir }}/bwa-{{version}}; make && mkdir -p "{{ soft_dir }}/BWA-{{version}}/bin" && cp bwa qualfa2fq.pl xa2multi.pl "{{ soft_dir }}/BWA-{{version}}/bin"
       args:
-        creates: "{{ soft_dir }}/BWA-0.7.12/bin/bwa"
+        creates: "{{ soft_dir }}/BWA-{{version}}/bin/bwa"
         
   become: yes
   become_user: "{{ username }}"
-
-
-
-#- file: dest="{{modules_dir}}/bio/BWA" state=directory mode=0755
-
-#- name: BWA module definition
-#  template: 
-#    src: templates/sw-module.lua.j2 
-#    dest: "{{ modules_dir }}/bio/BWA/0.7.12.lua"
-#    owner: root 
-#    mode: 0644
-#  with_items:
-#    - { help_text: 'This module loads the BWA aligner', dir: 'BWA-0.7.12' }
-
 

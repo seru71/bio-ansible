@@ -64,28 +64,6 @@
         - "{{test_work_dir}}"
         - "{{test_archive_dir}}"
 
-  #- name: Create and mount NGS share dir
-    #block:
-
-      #- file: path="{{ incoming_data_dir }}" state=directory mode="a+rx"
-      
-      #- name: save credentials in file
-        #lineinfile:
-          #path: "{{cifs_credentials_file}}"
-          #line: "username={{cifs_mount_username}}\npassword={{cifs_mount_password}}"
-          #create: yes
-            
-      #- name: Mount NFS share
-        #mount:
-          #path: "{{ incoming_data_dir }}"
-          #src: "{{ incoming_dir_NFS_share }}"
-          #fstype: cifs
-          #opts: "credentials=/root/cifs.credentials,uid={{ username }},gid={{ username }}"
-          #state: mounted
-        #ignore_errors: yes
-
-
-
       
   tasks:
   
@@ -107,6 +85,7 @@
     - include: tasks/bbmap.yml 
       tags: bbmap 
       version: 36.62
+
       
     - include: tasks/trimmomatic.yml 
       tags: trimmomatic 
@@ -124,10 +103,21 @@
       tags: biapipeline 
       repo: https://github.com/seru71/zao-bia-pipeline.git 
       version: HEAD
+
+#    - include: tasks/htslib.yml 
+#      tags: htslib 
+#      version: 1.6
+
+#    - include: tasks/samtools.yml 
+#      tags: samtools 
+#      version: 1.6 
+#      htslib_version: 1.6
+
+#    - include: tasks/bwa.yml 
+#      tags: bwa
+#      version: 0.7.13
     
-#    - include: tasks/bwa.yml tags=bwa
-#    - include: tasks/htslib.yml tags=htslib version=1.3.1
-#    - include: tasks/samtools.yml tags=samtools version=1.3.1 htslib_version=1.3.1
+      
 #    - include: tasks/bcftools.yml tags=bcftools version=1.2
 #    - include: tasks/vcftools.yml tags=vcftools version=0.1.12b
 
