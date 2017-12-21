@@ -104,19 +104,23 @@
       repo: https://github.com/seru71/zao-bia-pipeline.git 
       version: HEAD
 
-#    - include: tasks/htslib.yml 
-#      tags: htslib 
-#      version: 1.6
+    - include: tasks/htslib.yml 
+      tags: htslib 
+      version: 1.6
 
-#    - include: tasks/samtools.yml 
-#      tags: samtools 
-#      version: 1.6 
-#      htslib_version: 1.6
+    - include: tasks/samtools.yml 
+      tags: samtools 
+      version: 1.6 
+      htslib_version: 1.6
 
-#    - include: tasks/bwa.yml 
-#      tags: bwa
-#      version: 0.7.13
+    - include: tasks/bwa.yml 
+      tags: bwa
+      version: 0.7.13
     
+    - include: tasks/freebayes.yml 
+      tags: freebayes
+      version: 1.1.0
+
       
 #    - include: tasks/bcftools.yml tags=bcftools version=1.2
 #    - include: tasks/vcftools.yml tags=vcftools version=0.1.12b

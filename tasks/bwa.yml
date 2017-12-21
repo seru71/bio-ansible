@@ -1,6 +1,6 @@
 
 - name: Download and install BWA
-  block
+  block:
   
     - name: Download BWA
       get_url:
@@ -14,9 +14,9 @@
         copy: no
 
     - name: Build and Install BWA
-      shell: cd {{ source_dir }}/bwa-{{version}}; make && mkdir -p "{{ soft_dir }}/BWA-{{version}}/bin" && cp bwa qualfa2fq.pl xa2multi.pl "{{ soft_dir }}/BWA-{{version}}/bin"
+      shell: cd {{ source_dir }}/bwa-{{version}}; make && mkdir -p "{{ soft_dir }}/bwa-{{version}}/bin" && cp bwa qualfa2fq.pl xa2multi.pl "{{ soft_dir }}/bwa-{{version}}/bin"
       args:
-        creates: "{{ soft_dir }}/BWA-{{version}}/bin/bwa"
+        creates: "{{ soft_dir }}/bwa-{{version}}/bin/bwa"
         
   become: yes
   become_user: "{{ username }}"

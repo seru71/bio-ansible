@@ -1,0 +1,20 @@
+
+- name: Download and install Freebayes
+  block:
+  
+    - name: Download Freebayes
+      git:
+        repo: git://github.com/ekg/freebayes.git
+        dest: "{{soft_dir}}/freebayes-{{ version }}"
+        recursive: yes
+        version: "v{{ version }}"
+        
+    - name: Build Freebayes
+      shell: cd {{ soft_dir }}/freebayes-{{ version }} && make
+      args:
+        creates: "{{ soft_dir }}/freebayes-{{ version }}/bin/freebayes"
+        
+  become: yes
+  become_user: "{{ username }}"
+
+

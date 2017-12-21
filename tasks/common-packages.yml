@@ -42,6 +42,7 @@
     - texlive-xetex
     - texlive-latex-recommended
     - texlive-fonts-recommended
+    - libbz2-dev
     - libzmq3-dev
     - libncurses5-dev
     - r-base

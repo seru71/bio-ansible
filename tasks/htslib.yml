@@ -20,5 +20,5 @@
         creates: "{{ soft_dir }}/htslib-{{version}}/bin/tabix"
         
   become: yes
-  become_user: "{{ ngs_user }}"
+  become_user: "{{ username }}"
   

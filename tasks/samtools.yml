@@ -20,4 +20,4 @@
         creates: "{{ soft_dir }}/samtools-{{version}}/bin/samtools"
 
   become: yes
-  become_user: "{{ ngs_user }}"
+  become_user: "{{ username }}"
