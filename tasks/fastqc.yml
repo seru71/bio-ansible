@@ -19,19 +19,3 @@
   become: yes
   become_user: "{{ username }}"
 
-
-
-#- file: dest="{{ modules_dir }}/bio/fastqc" state=directory mode=0755
-
-#- name: FastQC module definition
-#  template:
-#    src: templates/sw-module.lua.j2
-#    dest: "{{ modules_dir }}/bio/fastqc/{{ version }}.lua"
-#    #owner: root
-#    mode: 0644
-#  with_items:
-#    - dir: 'FastQC-{{ version }}'
-#      skip_bin: true
-#      help_text: 'A quality control application for high throughput sequence data'
-
-

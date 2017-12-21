@@ -17,17 +17,3 @@
 # Fix file permissions
 - shell: find {{ soft_dir }}/BBMap-{{version}} -type d -exec chmod 0755 {} \; ; find {{ soft_dir }}/BBMap-{{version}} -type f -exec chmod 0644 {} \; ; chmod 0755 {{ soft_dir }}/BBMap-{{version}}/bbmap/*.sh
 
-#- file: dest="{{modules_dir}}/bio/BBMap" state=directory mode=0755
-
-#- name: BBMap module definition
-#  template: 
-#    src: templates/sw-module.lua.j2 
-#    dest: "{{ modules_dir }}/bio/BBMap/{{version}}.lua"
-#    #owner: root 
-#    mode: 0644
-#  with_items:
-#    - help_text: 'BBMap, a short read aligner, as well as various other bioinformatic tools'
-#      dir: 'BBMap-{{version}}/bbmap'
-#      skip_bin: true
-
-

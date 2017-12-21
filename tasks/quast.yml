@@ -16,16 +16,3 @@
 
   become: yes
   become_user: "{{ username }}"
-
-#- file: dest="{{modules_dir}}/bio/quast" state=directory mode=0755
-
-#- name: Quast module definition
-#  template: 
-#    src: templates/sw-module.lua.j2 
-#    dest: "{{ modules_dir }}/bio/quast/{{version}}.lua"
-#    #owner: root 
-#    mode: 0644
-#  with_items:
-#    - { help_text: 'This module loads the genome assembly QC tool - QUAST', dir: 'quast-{{version}}' }
-
-
